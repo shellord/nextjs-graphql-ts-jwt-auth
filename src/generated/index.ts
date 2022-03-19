@@ -28,7 +28,7 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  createUser: User
+  createUser: Token
 }
 
 export type MutationCreateUserArgs = {
@@ -40,6 +40,12 @@ export type MutationCreateUserArgs = {
 export type Query = {
   __typename?: 'Query'
   users: Array<User>
+}
+
+export type Token = {
+  __typename?: 'Token'
+  accessToken: Scalars['String']
+  refreshToken: Scalars['String']
 }
 
 export type User = {
@@ -58,7 +64,11 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = {
   __typename?: 'Mutation'
-  createUser: { __typename?: 'User'; id: string; name: string; email: string }
+  createUser: {
+    __typename?: 'Token'
+    accessToken: string
+    refreshToken: string
+  }
 }
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never }>
@@ -71,9 +81,8 @@ export type GetUsersQuery = {
 export const CreateUserDocument = gql`
   mutation CreateUser($name: String!, $email: String!, $password: String!) {
     createUser(name: $name, email: $email, password: $password) {
-      id
-      name
-      email
+      accessToken
+      refreshToken
     }
   }
 `
@@ -288,6 +297,7 @@ export type ResolversTypes = {
   Mutation: ResolverTypeWrapper<{}>
   Query: ResolverTypeWrapper<{}>
   String: ResolverTypeWrapper<Scalars['String']>
+  Token: ResolverTypeWrapper<Token>
   User: ResolverTypeWrapper<User>
 }
 
@@ -298,6 +308,7 @@ export type ResolversParentTypes = {
   Mutation: {}
   Query: {}
   String: Scalars['String']
+  Token: Token
   User: User
 }
 
@@ -306,7 +317,7 @@ export type MutationResolvers<
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
   createUser?: Resolver<
-    ResolversTypes['User'],
+    ResolversTypes['Token'],
     ParentType,
     ContextType,
     RequireFields<MutationCreateUserArgs, 'email' | 'name' | 'password'>
@@ -318,6 +329,15 @@ export type QueryResolvers<
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
+}
+
+export type TokenResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Token'] = ResolversParentTypes['Token'],
+> = {
+  accessToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  refreshToken?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export type UserResolvers<
@@ -334,5 +354,6 @@ export type UserResolvers<
 export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
+  Token?: TokenResolvers<ContextType>
   User?: UserResolvers<ContextType>
 }
