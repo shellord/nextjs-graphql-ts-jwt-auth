@@ -6,6 +6,14 @@ export const hashPassword = async (password: string): Promise<string> => {
   return hashedPassword
 }
 
+export const comparePassword = async (
+  password: string,
+  hashedPassword: string,
+): Promise<boolean> => {
+  const isValid = await brcypt.compare(password, hashedPassword)
+  return isValid
+}
+
 export const generateAccessToken = (userId: string): string => {
   return jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET!, {
     expiresIn: '15m',

@@ -29,11 +29,17 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation'
   createUser: Token
+  loginUser: Token
 }
 
 export type MutationCreateUserArgs = {
   email: Scalars['String']
   name: Scalars['String']
+  password: Scalars['String']
+}
+
+export type MutationLoginUserArgs = {
+  email: Scalars['String']
   password: Scalars['String']
 }
 
@@ -321,6 +327,12 @@ export type MutationResolvers<
     ParentType,
     ContextType,
     RequireFields<MutationCreateUserArgs, 'email' | 'name' | 'password'>
+  >
+  loginUser?: Resolver<
+    ResolversTypes['Token'],
+    ParentType,
+    ContextType,
+    RequireFields<MutationLoginUserArgs, 'email' | 'password'>
   >
 }
 
