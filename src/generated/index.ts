@@ -28,18 +28,18 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  createUser: Token
-  loginUser: Token
+  login: Token
+  signup: Token
 }
 
-export type MutationCreateUserArgs = {
+export type MutationLoginArgs = {
   email: Scalars['String']
-  name: Scalars['String']
   password: Scalars['String']
 }
 
-export type MutationLoginUserArgs = {
+export type MutationSignupArgs = {
   email: Scalars['String']
+  name: Scalars['String']
   password: Scalars['String']
 }
 
@@ -62,19 +62,15 @@ export type User = {
   password: Scalars['String']
 }
 
-export type CreateUserMutationVariables = Exact<{
+export type SignupMutationVariables = Exact<{
   name: Scalars['String']
   email: Scalars['String']
   password: Scalars['String']
 }>
 
-export type CreateUserMutation = {
+export type SignupMutation = {
   __typename?: 'Mutation'
-  createUser: {
-    __typename?: 'Token'
-    accessToken: string
-    refreshToken: string
-  }
+  signup: { __typename?: 'Token'; accessToken: string; refreshToken: string }
 }
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never }>
@@ -84,31 +80,31 @@ export type GetUsersQuery = {
   users: Array<{ __typename?: 'User'; id: string; name: string; email: string }>
 }
 
-export const CreateUserDocument = gql`
-  mutation CreateUser($name: String!, $email: String!, $password: String!) {
-    createUser(name: $name, email: $email, password: $password) {
+export const SignupDocument = gql`
+  mutation Signup($name: String!, $email: String!, $password: String!) {
+    signup(name: $name, email: $email, password: $password) {
       accessToken
       refreshToken
     }
   }
 `
-export type CreateUserMutationFn = Apollo.MutationFunction<
-  CreateUserMutation,
-  CreateUserMutationVariables
+export type SignupMutationFn = Apollo.MutationFunction<
+  SignupMutation,
+  SignupMutationVariables
 >
 
 /**
- * __useCreateUserMutation__
+ * __useSignupMutation__
  *
- * To run a mutation, you first call `useCreateUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateUserMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useSignupMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignupMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createUserMutation, { data, loading, error }] = useCreateUserMutation({
+ * const [signupMutation, { data, loading, error }] = useSignupMutation({
  *   variables: {
  *      name: // value for 'name'
  *      email: // value for 'email'
@@ -116,25 +112,23 @@ export type CreateUserMutationFn = Apollo.MutationFunction<
  *   },
  * });
  */
-export function useCreateUserMutation(
+export function useSignupMutation(
   baseOptions?: Apollo.MutationHookOptions<
-    CreateUserMutation,
-    CreateUserMutationVariables
+    SignupMutation,
+    SignupMutationVariables
   >,
 ) {
   const options = { ...defaultOptions, ...baseOptions }
-  return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(
-    CreateUserDocument,
+  return Apollo.useMutation<SignupMutation, SignupMutationVariables>(
+    SignupDocument,
     options,
   )
 }
-export type CreateUserMutationHookResult = ReturnType<
-  typeof useCreateUserMutation
->
-export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>
-export type CreateUserMutationOptions = Apollo.BaseMutationOptions<
-  CreateUserMutation,
-  CreateUserMutationVariables
+export type SignupMutationHookResult = ReturnType<typeof useSignupMutation>
+export type SignupMutationResult = Apollo.MutationResult<SignupMutation>
+export type SignupMutationOptions = Apollo.BaseMutationOptions<
+  SignupMutation,
+  SignupMutationVariables
 >
 export const GetUsersDocument = gql`
   query GetUsers {
@@ -322,17 +316,17 @@ export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
-  createUser?: Resolver<
+  login?: Resolver<
     ResolversTypes['Token'],
     ParentType,
     ContextType,
-    RequireFields<MutationCreateUserArgs, 'email' | 'name' | 'password'>
+    RequireFields<MutationLoginArgs, 'email' | 'password'>
   >
-  loginUser?: Resolver<
+  signup?: Resolver<
     ResolversTypes['Token'],
     ParentType,
     ContextType,
-    RequireFields<MutationLoginUserArgs, 'email' | 'password'>
+    RequireFields<MutationSignupArgs, 'email' | 'name' | 'password'>
   >
 }
 

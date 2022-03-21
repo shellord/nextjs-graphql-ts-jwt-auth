@@ -1,4 +1,4 @@
-import { CreateUserMutationVariables } from '@/generated'
+import { SignupMutationVariables } from '@/generated'
 
 import type { Context } from '@/lib/graphql/context'
 import {
@@ -9,7 +9,7 @@ import {
 } from '@/lib/hash'
 
 export const createUser = async (
-  { name, email, password }: CreateUserMutationVariables,
+  { name, email, password }: SignupMutationVariables,
   ctx: Context,
 ) => {
   const existingUser = await ctx.prisma.user.findFirst({
