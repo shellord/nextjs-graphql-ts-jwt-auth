@@ -26,10 +26,19 @@ export const generateRefreshToken = (userId: string): string => {
   })
 }
 
-export const verifyRefreshToken = (token: string): string => {
-  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!) as string
+export const verifyRefreshToken = (token: string) => {
+  return jwt.verify(token, process.env.REFRESH_TOKEN_SECRET!)
 }
 
-export const verifyAccessToken = (token: string): string => {
-  return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!) as string
+export const verifyAccessToken = (token: string) => {
+  return jwt.verify(token, process.env.ACCESS_TOKEN_SECRET!)
+}
+
+export const getUserFromToken = (token: string): string | null => {
+  try {
+    const userId = verifyAccessToken(token) as string
+    return userId
+  } catch (error) {
+    return null
+  }
 }

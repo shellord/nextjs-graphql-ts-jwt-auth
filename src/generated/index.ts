@@ -28,8 +28,26 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation'
-  login: Token
-  signup: Token
+  createPost?: Maybe<Post>
+  deletePost?: Maybe<Scalars['Boolean']>
+  editPost?: Maybe<Post>
+  login?: Maybe<Token>
+  signup?: Maybe<Token>
+}
+
+export type MutationCreatePostArgs = {
+  content: Scalars['String']
+  title: Scalars['String']
+}
+
+export type MutationDeletePostArgs = {
+  id: Scalars['ID']
+}
+
+export type MutationEditPostArgs = {
+  content: Scalars['String']
+  id: Scalars['ID']
+  title: Scalars['String']
 }
 
 export type MutationLoginArgs = {
@@ -43,8 +61,18 @@ export type MutationSignupArgs = {
   password: Scalars['String']
 }
 
+export type Post = {
+  __typename?: 'Post'
+  author: User
+  content: Scalars['String']
+  id: Scalars['ID']
+  title: Scalars['String']
+}
+
 export type Query = {
   __typename?: 'Query'
+  posts: Array<Post>
+  refresh?: Maybe<Token>
   users: Array<User>
 }
 
@@ -60,6 +88,7 @@ export type User = {
   id: Scalars['ID']
   name: Scalars['String']
   password: Scalars['String']
+  posts: Array<Post>
 }
 
 export type SignupMutationVariables = Exact<{
@@ -70,7 +99,11 @@ export type SignupMutationVariables = Exact<{
 
 export type SignupMutation = {
   __typename?: 'Mutation'
-  signup: { __typename?: 'Token'; accessToken: string; refreshToken: string }
+  signup?: {
+    __typename?: 'Token'
+    accessToken: string
+    refreshToken: string
+  } | null
 }
 
 export type GetUsersQueryVariables = Exact<{ [key: string]: never }>
@@ -295,6 +328,7 @@ export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']>
   ID: ResolverTypeWrapper<Scalars['ID']>
   Mutation: ResolverTypeWrapper<{}>
+  Post: ResolverTypeWrapper<Post>
   Query: ResolverTypeWrapper<{}>
   String: ResolverTypeWrapper<Scalars['String']>
   Token: ResolverTypeWrapper<Token>
@@ -306,6 +340,7 @@ export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']
   ID: Scalars['ID']
   Mutation: {}
+  Post: Post
   Query: {}
   String: Scalars['String']
   Token: Token
@@ -316,24 +351,55 @@ export type MutationResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation'],
 > = {
+  createPost?: Resolver<
+    Maybe<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationCreatePostArgs, 'content' | 'title'>
+  >
+  deletePost?: Resolver<
+    Maybe<ResolversTypes['Boolean']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationDeletePostArgs, 'id'>
+  >
+  editPost?: Resolver<
+    Maybe<ResolversTypes['Post']>,
+    ParentType,
+    ContextType,
+    RequireFields<MutationEditPostArgs, 'content' | 'id' | 'title'>
+  >
   login?: Resolver<
-    ResolversTypes['Token'],
+    Maybe<ResolversTypes['Token']>,
     ParentType,
     ContextType,
     RequireFields<MutationLoginArgs, 'email' | 'password'>
   >
   signup?: Resolver<
-    ResolversTypes['Token'],
+    Maybe<ResolversTypes['Token']>,
     ParentType,
     ContextType,
     RequireFields<MutationSignupArgs, 'email' | 'name' | 'password'>
   >
 }
 
+export type PostResolvers<
+  ContextType = any,
+  ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post'],
+> = {
+  author?: Resolver<ResolversTypes['User'], ParentType, ContextType>
+  content?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
+}
+
 export type QueryResolvers<
   ContextType = any,
   ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = {
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
+  refresh?: Resolver<Maybe<ResolversTypes['Token']>, ParentType, ContextType>
   users?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>
 }
 
@@ -354,11 +420,13 @@ export type UserResolvers<
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>
   name?: Resolver<ResolversTypes['String'], ParentType, ContextType>
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>
+  posts?: Resolver<Array<ResolversTypes['Post']>, ParentType, ContextType>
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>
 }
 
 export type Resolvers<ContextType = any> = {
   Mutation?: MutationResolvers<ContextType>
+  Post?: PostResolvers<ContextType>
   Query?: QueryResolvers<ContextType>
   Token?: TokenResolvers<ContextType>
   User?: UserResolvers<ContextType>

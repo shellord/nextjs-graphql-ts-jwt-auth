@@ -8,7 +8,9 @@ import { typeDefs } from '@/lib/graphql/type-defs'
 const apolloServer = new ApolloServer({
   typeDefs,
   resolvers,
-  context: createContext,
+  context: ({ req }) => {
+    return createContext(req)
+  },
 })
 
 const startServer = apolloServer.start()
